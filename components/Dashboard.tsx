@@ -1,53 +1,46 @@
-import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 
-export const Dashboard = () => {
-  // const buildingsQuery = useQuery(["buildings"], getTodos);
+//keep all this in utils
+const getAvailableRoomCount = (meetingRooms) => {
+  //todo;
+  return 3;
+};
+const getOnGoingMeetingCount = (meetingRooms) => {
+  //todo;
+  return 3;
+};
 
+export const Dashboard = ({ buildings, meetingRooms, meetings }) => {
   return (
     <div>
       <div className="mt-6 flow-root divide-y-2 w-10">
-        <div className="relative focus-within:ring-2 focus-within:ring-indigo-500 p-2">
-          <h3 className="text-sm font-semibold text-gray-800">
-            <a href="#" className="hover:underline focus:outline-none">
-              <span className="absolute inset-0" aria-hidden="true" />
-              Buildings
-            </a>
-          </h3>
-          <p className="mt-1 text-sm text-gray-600 line-clamp-2">Total 4</p>
-        </div>
-
-        <div className="relative focus-within:ring-2 focus-within:ring-indigo-500 p-2">
-          <h3 className="text-sm font-semibold text-gray-800">
-            <a href="#" className="hover:underline focus:outline-none">
-              <span className="absolute inset-0" aria-hidden="true" />
-              Rooms
-            </a>
-          </h3>
+        <div>
+          <h3 className="text-sm font-semibold text-gray-800">Buildings</h3>
           <p className="mt-1 text-sm text-gray-600 line-clamp-2">
-            Total 20 <br />
-            Free Now 5
+            Total {buildings.length}
           </p>
         </div>
-        <div className="relative focus-within:ring-2 focus-within:ring-indigo-500 p-2">
-          <h3 className="text-sm font-semibold text-gray-800">
-            <a href="#" className="hover:underline focus:outline-none">
-              <span className="absolute inset-0" aria-hidden="true" />
-              Meetings
-            </a>
-          </h3>
+        <div>
+          <h3 className="text-sm font-semibold text-gray-800">Rooms</h3>
           <p className="mt-1 text-sm text-gray-600 line-clamp-2">
-            Total 100 Today <br />
-            Total 10 going on now
+            Total {buildings.length} <br />
+            Free Now {getAvailableRoomCount(meetingRooms)}
+          </p>
+        </div>
+        <div>
+          <h3 className="text-sm font-semibold text-gray-800">Meetings</h3>
+          <p className="mt-1 text-sm text-gray-600 line-clamp-2">
+            Total {meetings.length} Today <br />
+            Total {getOnGoingMeetingCount(meetingRooms)} going on now
           </p>
         </div>
       </div>
       <div className="mt-6">
-        <a
-          href="#"
-          className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
-        >
-          Add a meeting
-        </a>
+        <Link href="/new-meeting">
+          <a className="inline-flex items-center rounded border border-transparent bg-indigo-600 px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            Add a meeting
+          </a>
+        </Link>
       </div>
     </div>
   );

@@ -1,14 +1,24 @@
 import React from "react";
 import { AppProps } from "next/app";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "../styles/globals.css";
-const queryClient = new QueryClient();
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  gql,
+} from "@apollo/client";
+
+const client = new ApolloClient({
+  uri: "http://smart-meeting.herokuapp.com/graphql",
+  cache: new InMemoryCache(),
+  headers: { token: "a123gjhgjsdf6576" },
+});
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <QueryClientProvider client={queryClient}>
+    <ApolloProvider client={client}>
       <Component {...pageProps} />
-    </QueryClientProvider>
+    </ApolloProvider>
   );
 }
 
