@@ -9,7 +9,7 @@ import { GET_BUILDINGS } from "../utils/queries";
 const schema = yup
   .object({
     title: yup.string().required("Meeting title is required"),
-    date: yup.date().required("Date is required"),
+    date: yup.string().required("Date is required"),
     startTime: yup.string().required("Start Time is required"),
     endTime: yup.string().required("End Time is required"),
     building: yup.string().required("Select a building"),
@@ -29,11 +29,12 @@ export const AddMeeting = ({ onNext }) => {
   const onSubmit = (data) => onNext(data);
 
   return (
-    <Layout additionalTitle="New Meeting">
-      <form
-        className="space-y-8 divide-y divide-gray-200 p-5"
-        onSubmit={handleSubmit(onSubmit)}
-      >
+    <Layout title="New Meeting">
+      <form className="space-y-8 p-5" onSubmit={handleSubmit(onSubmit)}>
+        <h2 className="mt-3 text-xl font-bold tracking-tight text-center">
+          Add Meeting
+        </h2>
+
         <div className="space-y-6 sm:space-y-5">
           <div>
             <label

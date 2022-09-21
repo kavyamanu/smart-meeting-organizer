@@ -1,19 +1,18 @@
 import { useQuery, useMutation } from "@apollo/client";
-import { yupResolver } from "@hookform/resolvers/yup";
-import cn from "classnames";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import Layout from "./Layout";
 import { GET_BUILDING, ADD_MEETING } from "../utils/queries";
 import { useState } from "react";
+import cn from "classnames";
 
 export const SelectRoom = ({ data }) => {
-  const [meetingRoomId, setMeetingRoomId] = useState();
+  const [meetingRoomId, setMeetingRoomId] = useState("");
   const { title, date, startTime, endTime } = data;
   const buildingQuery = useQuery(GET_BUILDING, {
     variables: { id: parseInt(data.building) },
   });
-  const [addMeeting, { loading, error }] = useMutation(ADD_MEETING);
+  const [addMeeting, { loading, error }] = useMutation(ADD_MEETING, {onCompleted() {
+    alert("new meeting has been")
+  },});
 
   const createMeeting = () => {
     addMeeting({
@@ -29,32 +28,40 @@ export const SelectRoom = ({ data }) => {
   };
 
   return (
-    <Layout additionalTitle="New Meeting">
-      <h2>Please select one of the free rooms</h2>
-      <div className="space-y-8 divide-y divide-gray-200 p-5">
-        {buildingQuery.data?.Building.meetingRooms.map((meetingRoom) => {
-          return (
-            <div
-              key={meetingRoom.id}
-              className="bg-indigo-500 shadow-lg shadow-indigo-500/50"
-              onClick={() => setMeetingRoomId(meetingRoom.id)}
-            >
-              {meetingRoom.name}
-              building {buildingQuery.data?.Building.name}
-              floor {meetingRoom.floor}
-            </div>
-          );
-        })}
+    <Layout title="New Meeting">
+      <div className="flex flex-col">
+        <h2 className="mt-3 text-xl font-bold tracking-tight text-center">
+          Please select one of the free rooms
+        </h2>
+        {buildingQuery.loading && <p>Fetching meeting rooms...</p>}
+        <div className="space-y-6 p-4 ">
+          {buildingQuery.data?.Building.meetingRooms.map((meetingRoom) => {
+            return (
+              <div
+                key={meetingRoom.id}
+                className={cn(
+                  "space-y-3 p-5 shadow-lg rounded overflow-hidden border-2 border-indigo-300 hover:border-indigo-600 cursor-pointer",
+                  meetingRoomId === meetingRoom.id && "shadow-indigo-500/50"
+                )}
+                onClick={() => setMeetingRoomId(meetingRoom.id)}
+              >
+                <h3>{meetingRoom.name}</h3>
+                <p>building {buildingQuery.data?.Building.name}</p>
+                <p>floor {meetingRoom.floor}</p>
+              </div>
+            );
+          })}
 
-        <div className="py-5 flex justify-center">
-          <button
-            disabled={!meetingRoomId || loading}
-            onClick={createMeeting}
-            type="button"
-            className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            Create Meeting
-          </button>
+          <div className="py-5 flex justify-center">
+            <button
+              disabled={!meetingRoomId || loading}
+              onClick={createMeeting}
+              type="button"
+              className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Create Meeting
+            </button>
+          </div>
         </div>
       </div>
     </Layout>
